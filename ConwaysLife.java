@@ -23,8 +23,11 @@ public class ConwaysLife implements MouseListener, ActionListener {
 		frame.add( panel, BorderLayout.CENTER ) ;
 		south.setLayout( new GridLayout( 1, 3));
 		south.add(step);
+		step.addActionListener(this);
 		south.add(start);
+		start.addActionListener(this);
 		south.add(stop);
+		stop.addActionListener(this);
 		frame.add(south, BorderLayout.SOUTH);
 		//Add mouse listener for input.
 		panel.addMouseListener( this );
@@ -70,22 +73,56 @@ public class ConwaysLife implements MouseListener, ActionListener {
 	}
 	
 	public void step() {
+		boolean[][] newGrid = new boolean[grid.length][grid.length];
 		for (int x = 0; x < grid.length; x++) {
 			for(int y = 0; y < grid.length; y++) {
 				int neighborCount = 0;
-				if(y > 0 && grid[x][y-1] == true) {
-					neighborCount++;
-				}
-				if(x > 0 && grid[x-1][y] == true) {
-					neighborCount++;
-				}
-				//TODO add rest of neighbours 
+			if(y > 0 && grid[x][y-1] == true) {		//Above
+				neighborCount++;
+			}
+			if(y < grid.length - 1  && grid[x][y+1] == true) {	//beneath
+				neighborCount++;
+			}
+			if ( y < grid.length - 1 && x < grid.length - 1 && grid[x + 1][ y +1] == true) { // down right
+				neighborCount++;
+			}
+			if ( y > 0 && x < grid.length - 1 && grid[x + 1][ y -1] == true) { // up right
+				neighborCount++;
+			}
+			if ( y < grid.length - 1 && x > 0 && grid[x - 1][ y +1] == true) { // down left
+				neighborCount++;
+			}
+			if ( y > 0 && x > 0 && grid[x - 1][ y -1] == true) { // up left
+				neighborCount++;
+			}
+			if(x < grid.length - 1 && grid[x+1][y] == true) { 	//Check to right
+			neighborCount++;
+			}
+			if(x > 0 && grid[x-1][y] == true) { 	//Check to left
+				neighborCount++;
+			}
+			
 				
-				
+				if(grid[x][y] == true)	{
+					if (neighborCount == 2 || neighborCount == 3) {
+						newGrid[x][y] = true;
+					}
+					else {
+						newGrid[x][y] = false;
+					}
+				}
+				else { 
+					if (neighborCount == 3) {
+						newGrid[x][y] = true;
+					}
+					else{
+						newGrid[x][y] = false;
+					}
+				}
 			}
 		}
+		grid = newGrid;
+		panel.setGrid(newGrid);
+		frame.repaint();
 	}
-	
-	
-	
 }

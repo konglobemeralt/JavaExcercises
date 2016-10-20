@@ -10,6 +10,10 @@ public class MyPanel extends JPanel {
 		grid = newGrid ;
 	}
 	
+	public void setGrid(boolean[][] newGrid){
+			grid = newGrid ;
+	}
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g) ;
 		
@@ -23,7 +27,6 @@ public class MyPanel extends JPanel {
 					if (grid[i][j] == true) {
 						g.setColor(Color.BLUE) ;
 						g.fillRect((int)( i * boxWidth), (int)(j * boxHeight), (int)(boxWidth), (int)(boxHeight));
-						
 					}
 			}
 		}
