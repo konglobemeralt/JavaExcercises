@@ -4,10 +4,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.*;
 
-public class ConwaysLife implements MouseListener, ActionListener {
+public class ConwaysLife implements MouseListener, ActionListener, Runnable {
 	
-	final int WIDTH = 20 ;
-	final int HEIGHT= 20 ;
+	final int WIDTH = 70 ;
+	final int HEIGHT= 70 ;
+	final int DELAY = 200;
 	JFrame frame = new JFrame( "Game of life" ) ;
 	boolean[][] grid = new boolean [WIDTH] [HEIGHT] ;
 	MyPanel panel = new MyPanel( grid ) ;
@@ -17,8 +18,10 @@ public class ConwaysLife implements MouseListener, ActionListener {
 	JButton stop = new JButton( "Stop" ) ;
 	Container south = new Container() ;
 	
+	boolean running = false;
+	
 	public ConwaysLife() {
-		frame.setSize( 600, 600 ) ;
+		frame.setSize( WIDTH * 10 , HEIGHT * 10) ;
 		frame.setLayout( new BorderLayout() ) ;
 		frame.add( panel, BorderLayout.CENTER ) ;
 		south.setLayout( new GridLayout( 1, 3));
@@ -56,6 +59,7 @@ public class ConwaysLife implements MouseListener, ActionListener {
 		
 	}
 	
+	
 	public void mouseReleased(MouseEvent ev) {
 		System.out.println( ev.getX() + "," + ev.getY()) ;
 		int row = Math.min( ev.getY() / ( panel.getHeight() / HEIGHT), HEIGHT -1 ) ;
@@ -68,9 +72,36 @@ public class ConwaysLife implements MouseListener, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(step) == true) {
+			if(running == false){
 			step();
+			frame.repaint();
+			}
+		}
+		if (e.getSource().equals(start) == true) {
+			if(running == false){
+			running = true;
+			Thread t = new Thread(this);
+			t.start();
+			}
+		}
+		if (e.getSource().equals(stop) == true) {
+			running = false;
 		}
 	}
+	
+	public void run() {
+		while (running){
+			step();
+			frame.repaint();
+			try{
+				Thread.sleep(DELAY);
+			}	catch(Exception ex){
+						ex.printStackTrace();
+			}		
+		}
+	}
+	
+
 	
 	public void step() {
 		boolean[][] newGrid = new boolean[grid.length][grid.length];
